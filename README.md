@@ -22,6 +22,10 @@ Download the code from the repository:
 ```
 git clone git@github.com:Bhargav-Soothram/beginner_tutorials.git
 ```
+Now rename the package using (this is for build purposes)
+```
+mv beginner_tutorials cpp_pubsub
+```
 It is time to build the package! But before that, check if you have all the dependencies using resdep before going ahead:
 ```
 rosdep install -i --from-path src --rosdistro foxy -y
