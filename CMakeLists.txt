@@ -46,4 +46,6 @@ ament_export_dependencies(rosidl_default_runtime)
 rosidl_target_interfaces(talker
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
+
 ament_package()

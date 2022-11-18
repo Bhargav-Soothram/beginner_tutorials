@@ -40,6 +40,7 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
   message_.data = this->get_parameter("my_message").as_string();
 
   int message_freq = this->get_parameter("my_message_freq").as_int();
+
   if (message_freq < 500) {
     RCLCPP_FATAL(this->get_logger(),
                 "Too quick to read, aborting...");

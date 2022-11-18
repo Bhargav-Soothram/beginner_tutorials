@@ -39,7 +39,7 @@
 class MinimalPublisher : public rclcpp::Node {
  public:
   MinimalPublisher(const std::string &node_name = "minimal_publisher",
-                   std::string topic_name = "topic");
+                   std::string topic_name = "chatter");
 
  private:
   rclcpp::TimerBase::SharedPtr timer_;

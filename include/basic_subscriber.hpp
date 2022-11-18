@@ -37,7 +37,7 @@
 class MinimalSubscriber : public rclcpp::Node {
  public:
   MinimalSubscriber(const std::string &node_name = "minimal_subscriber",
-                    std::string topic_name = "topic");
+                    std::string topic_name = "chatter");
 
  private:
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
