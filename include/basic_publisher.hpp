@@ -31,8 +31,10 @@
 #define INCLUDE_BASIC_PUBLISHER_HPP_
 
 #include <string>
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include "cpp_pubsub/srv/modify_string.hpp"
 
 class MinimalPublisher : public rclcpp::Node {
  public:
@@ -45,7 +47,10 @@ class MinimalPublisher : public rclcpp::Node {
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
   std_msgs::msg::String message_;
+  rclcpp::Service<cpp_pubsub::srv::ModifyString>::SharedPtr service_;
   void timer_callback();
+  void change_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
+          std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
 };
 
 #endif  // INCLUDE_BASIC_PUBLISHER_HPP_
