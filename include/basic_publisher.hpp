@@ -39,9 +39,7 @@
 class MinimalPublisher : public rclcpp::Node {
  public:
   MinimalPublisher(const std::string &node_name = "minimal_publisher",
-                   std::string topic_name = "topic",
-                   std::string pub_msg = "Stranger Things",
-                   int time_intl = 500);
+                   std::string topic_name = "topic");
 
  private:
   rclcpp::TimerBase::SharedPtr timer_;
@@ -49,7 +47,7 @@ class MinimalPublisher : public rclcpp::Node {
   std_msgs::msg::String message_;
   rclcpp::Service<cpp_pubsub::srv::ModifyString>::SharedPtr service_;
   void timer_callback();
-  void change_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
+  void update_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
           std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
 };
 

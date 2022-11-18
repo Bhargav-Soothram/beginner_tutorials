@@ -31,16 +31,32 @@
 #include <basic_publisher.hpp>
 
 MinimalPublisher::MinimalPublisher(const std::string &node_name,
-                                   std::string topic_name,
-                                   std::string pub_msg,
-                                   int time_intl)
+                                   std::string topic_name)
     : Node(node_name) {
-  message_.data = "Stranger Things!";
-  publisher_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
+
+  this->declare_parameter("my_message", "Stranger Things!");
+  this->declare_parameter("my_message_freq", 1000);
+
+  message_.data = this->get_parameter("my_message").as_string();
+
+  int message_freq = this->get_parameter("my_message_freq").as_int();
+  if (message_freq < 500) {
+    RCLCPP_FATAL(this->get_logger(),
+                "Too quick to read, aborting...");
+  exit(2);
+  }
+  else if (!(message_freq < 500) && (message_freq < 700)) {
+    RCLCPP_ERROR(this->get_logger(), "Might face difficulty reading at such high message publish rates!");
+  }
+  else {
+    RCLCPP_DEBUG(this->get_logger(), "Starting the publisher...");
+  }
+
   timer_ = this->create_wall_timer(
-      std::chrono::milliseconds(time_intl),
+      std::chrono::milliseconds(message_freq),
       std::bind(&MinimalPublisher::timer_callback, this));
-  service_ = this->create_service<cpp_pubsub::srv::ModifyString>("modify_string", std::bind(&MinimalPublisher::change_string, this, std::placeholders::_1, std::placeholders::_2));
+  publisher_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
+  service_ = this->create_service<cpp_pubsub::srv::ModifyString>("modify_string", std::bind(&MinimalPublisher::update_string, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void MinimalPublisher::timer_callback() {
@@ -48,7 +64,7 @@ void MinimalPublisher::timer_callback() {
   publisher_->publish(message_);
 }
 
-void MinimalPublisher::change_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
+void MinimalPublisher::update_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
           std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response) {
             message_.data = request->new_string;
             RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Incoming request\nnew_string: %s", request->new_string.c_str());
