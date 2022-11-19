@@ -78,6 +78,6 @@ You can choose to give one or both the arguments at launch.
 
 
 ## **Sample Outputs**
-Attached are two sample outputs for different logger levels:
+Attached are two sample outputs for different log levels:
 ![Alt text](results/sample_outputs/ros2_rqt1.png?raw=true "INFO log level")
 ![Alt text](results/sample_outputs/ros2_rqt2.png?raw=true "ERROR log level")
