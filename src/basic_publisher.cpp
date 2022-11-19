@@ -33,14 +33,16 @@
 MinimalPublisher::MinimalPublisher(const std::string &node_name,
                                    std::string topic_name)
     : Node(node_name) {
-
+  
+  // Declaring parameters
   this->declare_parameter("my_message", "Stranger Things!");
   this->declare_parameter("my_message_freq", 1000);
 
+  // Reading from parameters
   message_.data = this->get_parameter("my_message").as_string();
-
   int message_freq = this->get_parameter("my_message_freq").as_int();
 
+  // For covering all the five log levels
   if (message_freq < 500) {
     RCLCPP_FATAL(this->get_logger(),
                 "Too quick to read, aborting...");
@@ -53,18 +55,23 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
     RCLCPP_DEBUG(this->get_logger(), "Starting the publisher...");
   }
 
+  // creating callback to node
   timer_ = this->create_wall_timer(
       std::chrono::milliseconds(message_freq),
       std::bind(&MinimalPublisher::timer_callback, this));
+  
+  // creating a publisher node
   publisher_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
   service_ = this->create_service<cpp_pubsub::srv::ModifyString>("modify_string", std::bind(&MinimalPublisher::update_string, this, std::placeholders::_1, std::placeholders::_2));
 }
 
+// Publishing to a topic
 void MinimalPublisher::timer_callback() {
   RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message_.data.c_str());
   publisher_->publish(message_);
 }
 
+// Processing requests
 void MinimalPublisher::update_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
           std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response) {
             message_.data = request->new_string;

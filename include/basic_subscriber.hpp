@@ -36,12 +36,23 @@
 
 class MinimalSubscriber : public rclcpp::Node {
  public:
+  /**
+   * @brief Construct a new Minimal Subscriber object
+   * 
+   * @param node_name Name of the subscriber node
+   * @param topic_name Name of the topic over which messages are received
+   */
   MinimalSubscriber(const std::string &node_name = "minimal_subscriber",
                     std::string topic_name = "chatter");
 
  private:
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
-  void topic_callback(const std_msgs::msg::String::SharedPtr msg) const;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;  //!<This is a pointer that subscribes to a string topic
+  /**
+   * @brief Receives messages from a topic and prints them
+   * 
+   * @param msg Message packet from the topic
+   */
+  void topic_callback(const std_msgs::msg::String::SharedPtr msg) const; 
 };
 
 #endif  // INCLUDE_BASIC_SUBSCRIBER_HPP_

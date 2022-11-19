@@ -22,12 +22,14 @@ find_package(std_msgs REQUIRED)
 
 include_directories(include)
 
+# for interfaces
 find_package(rosidl_default_generators REQUIRED)
 set(srv_files "srv/ModifyString.srv")
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${srv_files}
 )
 
+# executable for the publisher node 
 add_executable(talker app/talker.cpp src/basic_publisher.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
 
@@ -35,6 +37,7 @@ install(TARGETS
   talker
   DESTINATION lib/${PROJECT_NAME})
 
+# executable for the subscriber node 
 add_executable(listener app/listener.cpp src/basic_subscriber.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
 
@@ -42,10 +45,12 @@ install(TARGETS
   listener
   DESTINATION lib/${PROJECT_NAME})
 
+# link target interfaces
 ament_export_dependencies(rosidl_default_runtime)
 rosidl_target_interfaces(talker
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
+# launch files
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
 
 ament_package()
