@@ -1,4 +1,4 @@
-# ROS2 Beginner Tutorials - Publisher/Subscriber
+# ROS2 Beginner Tutorials
 This is a basic tutorial on writing and executing a Publisher-Subscriber pair using ROS2. Firstly, install all the dependencies required 
 
 ## **Setting up and sourcing ROS**
@@ -42,6 +42,8 @@ colcon build --packages-select cpp_pubsub
 
 ## **Running the package**
 Open a new terminal, navigate to `ros2_ws`, and source the setup files:
+
+### **Publisher and Subscriber**
 ```
 . install/setup.bash
 ```
@@ -55,6 +57,7 @@ ros2 run beginner_tutorials listener
 ```
 That is it, you have a publisher talking to a subscriber!
 
+### **Service-Client**
 Now, let us see how to request for a change in the string that is being published. This can be accomplished using a service-client (request-response) paradigm. To request for a change in the string,
 ```
 ros2 service call /modify_string cpp_pubsub/srv/ModifyString "{new_string: <your_string>}"
@@ -62,9 +65,9 @@ ros2 service call /modify_string cpp_pubsub/srv/ModifyString "{new_string: <your
 ## **Using Launch files**
 We can use launch files to 'spin' multiple nodes at once with arguments passed to each of them. The arguments provided are the parameters to the nodes being executed. We have two parameters that can take user inputs,
 
-`my_message` # the new message that needs to be published
+* `my_message` *# the new message to be published*
 
-`my_message_freq` # time between successive messages in ms
+* `my_message_freq` *# time between successive messages in ms*
 
 To do this, execute the following command:
 ```

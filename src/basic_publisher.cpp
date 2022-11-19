@@ -33,7 +33,6 @@
 MinimalPublisher::MinimalPublisher(const std::string &node_name,
                                    std::string topic_name)
     : Node(node_name) {
-  
   // Declaring parameters
   this->declare_parameter("my_message", "Stranger Things!");
   this->declare_parameter("my_message_freq", 1000);
@@ -44,14 +43,13 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
 
   // For covering all the five log levels
   if (message_freq < 500) {
-    RCLCPP_FATAL(this->get_logger(),
-                "Too quick to read, aborting...");
-  exit(2);
-  }
-  else if (!(message_freq < 500) && (message_freq < 700)) {
-    RCLCPP_ERROR(this->get_logger(), "Might face difficulty reading at such high message publish rates!");
-  }
-  else {
+    RCLCPP_FATAL(this->get_logger(), "Too quick to read, aborting...");
+    exit(2);
+  } else if (!(message_freq < 500) && (message_freq < 700)) {
+    RCLCPP_ERROR(
+        this->get_logger(),
+        "Might face difficulty reading at such high message publish rates!");
+  } else {
     RCLCPP_DEBUG(this->get_logger(), "Starting the publisher...");
   }
 
@@ -59,10 +57,12 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
   timer_ = this->create_wall_timer(
       std::chrono::milliseconds(message_freq),
       std::bind(&MinimalPublisher::timer_callback, this));
-  
+
   // creating a publisher node
   publisher_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
-  service_ = this->create_service<cpp_pubsub::srv::ModifyString>("modify_string", std::bind(&MinimalPublisher::update_string, this, std::placeholders::_1, std::placeholders::_2));
+  service_ = this->create_service<cpp_pubsub::srv::ModifyString>(
+      "modify_string", std::bind(&MinimalPublisher::update_string, this,
+                                 std::placeholders::_1, std::placeholders::_2));
 }
 
 // Publishing to a topic
@@ -72,10 +72,13 @@ void MinimalPublisher::timer_callback() {
 }
 
 // Processing requests
-void MinimalPublisher::update_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
-          std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response) {
-            message_.data = request->new_string;
-            RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Incoming request\nnew_string: %s", request->new_string.c_str());
-            response->status = "STRING CHANGED!";
-            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]", (long int)response->status.c_str());
-          }
+void MinimalPublisher::update_string(
+    const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
+    std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response) {
+  message_.data = request->new_string;
+  RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Incoming request\nnew_string: %s",
+              request->new_string.c_str());
+  response->status = "STRING CHANGED!";
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]",
+              (int)response->status.c_str());
+}

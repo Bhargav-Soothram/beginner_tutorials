@@ -34,13 +34,14 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+
 #include "cpp_pubsub/srv/modify_string.hpp"
 
 class MinimalPublisher : public rclcpp::Node {
  public:
   /**
    * @brief Construct a new Minimal Publisher object
-   * 
+   *
    * @param node_name Name of the publisher node
    * @param topic_name Name of the topic over which messages are sent
    */
@@ -48,25 +49,28 @@ class MinimalPublisher : public rclcpp::Node {
                    std::string topic_name = "chatter");
 
  private:
-  rclcpp::TimerBase::SharedPtr timer_;  //!< Pointer to callback 
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;  //!< Pointer to publisher  
+  rclcpp::TimerBase::SharedPtr timer_;  //!< Pointer to callback
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr
+      publisher_;                  //!< Pointer to publisher
   std_msgs::msg::String message_;  //!< Message packet from a topic
-  rclcpp::Service<cpp_pubsub::srv::ModifyString>::SharedPtr service_;  //!< Pointer to service
+  rclcpp::Service<cpp_pubsub::srv::ModifyString>::SharedPtr
+      service_;  //!< Pointer to service
 
   /**
    * @brief Publishes messages and prints publish messages
-   * 
+   *
    */
   void timer_callback();
 
   /**
-   * @brief Modifies the string printed upon a request 
-   * 
+   * @brief Modifies the string printed upon a request
+   *
    * @param request request message from the client
    * @param response response sent by the server
    */
-  void update_string(const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
-          std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
+  void update_string(
+      const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
+      std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
 };
 
 #endif  // INCLUDE_BASIC_PUBLISHER_HPP_
