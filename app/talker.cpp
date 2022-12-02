@@ -31,10 +31,10 @@
 #include <basic_publisher.hpp>
 #include <memory>
 
-int main(int argc, char* argv[]) {
+auto main(int argc, char* argv[]) -> int {
   rclcpp::init(argc, argv);
   rclcpp::spin(
-      std::make_shared<MinimalPublisher>());  // 'spins' node to continuously
+      std::make_shared<MinimalPublisher>(argv, "talker", "example_topic"));  // 'spins' node to continuously
                                               // receive messages
   rclcpp::shutdown();
   return 0;

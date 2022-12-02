@@ -19,6 +19,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)  
 
 include_directories(include)
 
@@ -31,7 +33,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 # executable for the publisher node 
 add_executable(talker app/talker.cpp src/basic_publisher.cpp)
-ament_target_dependencies(talker rclcpp std_msgs)
+ament_target_dependencies(talker rclcpp std_msgs tf2 tf2_ros)
 
 install(TARGETS
   talker

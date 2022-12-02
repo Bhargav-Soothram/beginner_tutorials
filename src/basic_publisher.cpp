@@ -30,8 +30,7 @@
 
 #include <basic_publisher.hpp>
 
-MinimalPublisher::MinimalPublisher(const std::string &node_name,
-                                   std::string topic_name)
+MinimalPublisher::MinimalPublisher(char * transformation[], const std::string &node_name, std::string topic_name)
     : Node(node_name) {
   // Declaring parameters
   this->declare_parameter("my_message", "Stranger Things!");
@@ -63,6 +62,12 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
   service_ = this->create_service<cpp_pubsub::srv::ModifyString>(
       "modify_string", std::bind(&MinimalPublisher::update_string, this,
                                  std::placeholders::_1, std::placeholders::_2));
+
+  // additions for Week11_HW after this...
+  MinimalPublisher::tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
+  // Publish static transforms once at startup
+  this->make_transforms(transformation);
 }
 
 // Publishing to a topic
@@ -80,5 +85,30 @@ void MinimalPublisher::update_string(
               request->new_string.c_str());
   response->status = "STRING CHANGED!";
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]",
-              (int)response->status.c_str());
+              (long int)response->status.c_str());
 }
+
+
+void MinimalPublisher::make_transforms(char * transformation[])
+  {
+    geometry_msgs::msg::TransformStamped t;
+
+    t.header.stamp = this->get_clock()->now();
+    t.header.frame_id = "world";
+    t.child_frame_id = transformation[1];
+
+    t.transform.translation.x = atof(transformation[2]);
+    t.transform.translation.y = atof(transformation[3]);
+    t.transform.translation.z = atof(transformation[4]);
+    tf2::Quaternion q;
+    q.setRPY(
+      atof(transformation[5]),
+      atof(transformation[6]),
+      atof(transformation[7]));
+    t.transform.rotation.x = q.x();
+    t.transform.rotation.y = q.y();
+    t.transform.rotation.z = q.z();
+    t.transform.rotation.w = q.w();
+
+    tf_static_broadcaster_->sendTransform(t);
+  }
