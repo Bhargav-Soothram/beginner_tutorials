@@ -48,7 +48,7 @@ class MinimalPublisher : public rclcpp::Node {
    * @param node_name Name of the publisher node
    * @param topic_name Name of the topic over which messages are sent
    */
-  MinimalPublisher(char * transformation[], const std::string &node_name, std::string topic_name);
+  MinimalPublisher(const std::string &node_name, std::string topic_name);
 
  private:
   rclcpp::TimerBase::SharedPtr timer_;  //!< Pointer to callback
@@ -74,7 +74,7 @@ class MinimalPublisher : public rclcpp::Node {
       const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
       std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
 
-  void make_transforms(char * transformation[]);
+  void make_transforms();
   std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
 };
 

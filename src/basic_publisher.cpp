@@ -30,7 +30,7 @@
 
 #include <basic_publisher.hpp>
 
-MinimalPublisher::MinimalPublisher(char * transformation[], const std::string &node_name, std::string topic_name)
+MinimalPublisher::MinimalPublisher(const std::string &node_name, std::string topic_name)
     : Node(node_name) {
   // Declaring parameters
   this->declare_parameter("my_message", "Stranger Things!");
@@ -67,7 +67,7 @@ MinimalPublisher::MinimalPublisher(char * transformation[], const std::string &n
   MinimalPublisher::tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
   // Publish static transforms once at startup
-  this->make_transforms(transformation);
+  this->make_transforms();
 }
 
 // Publishing to a topic
@@ -89,22 +89,22 @@ void MinimalPublisher::update_string(
 }
 
 
-void MinimalPublisher::make_transforms(char * transformation[])
+void MinimalPublisher::make_transforms()
   {
     geometry_msgs::msg::TransformStamped t;
 
     t.header.stamp = this->get_clock()->now();
     t.header.frame_id = "world";
-    t.child_frame_id = transformation[1];
+    t.child_frame_id = "dlihc";
 
-    t.transform.translation.x = atof(transformation[2]);
-    t.transform.translation.y = atof(transformation[3]);
-    t.transform.translation.z = atof(transformation[4]);
+    t.transform.translation.x = 1;
+    t.transform.translation.y = 0;
+    t.transform.translation.z = 0;
     tf2::Quaternion q;
     q.setRPY(
-      atof(transformation[5]),
-      atof(transformation[6]),
-      atof(transformation[7]));
+      0,
+      0,
+      10);
     t.transform.rotation.x = q.x();
     t.transform.rotation.y = q.y();
     t.transform.rotation.z = q.z();

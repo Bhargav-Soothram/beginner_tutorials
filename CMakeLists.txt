@@ -8,7 +8,7 @@ endif()
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -17,6 +17,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_gtest REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
@@ -47,10 +48,16 @@ install(TARGETS
   listener
   DESTINATION lib/${PROJECT_NAME})
 
+# executable for testing
+set(TESTFILES test/minimal_integration_test.cpp)
+ament_add_gtest(my_test ${TESTFILES})
+ament_target_dependencies(my_test rclcpp std_msgs geometry_msgs rclcpp tf2_ros tf2)
+
 # link target interfaces
 ament_export_dependencies(rosidl_default_runtime)
 rosidl_target_interfaces(talker
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_target_interfaces(my_test ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 # launch files
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
