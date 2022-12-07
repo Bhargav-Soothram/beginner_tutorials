@@ -63,6 +63,13 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name,
   service_ = this->create_service<cpp_pubsub::srv::ModifyString>(
       "modify_string", std::bind(&MinimalPublisher::update_string, this,
                                  std::placeholders::_1, std::placeholders::_2));
+
+  // additions for Week11_HW after this...
+  MinimalPublisher::tf_static_broadcaster_ =
+      std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+
+  // Publish static transforms once at startup
+  this->make_transforms();
 }
 
 // Publishing to a topic
@@ -80,5 +87,25 @@ void MinimalPublisher::update_string(
               request->new_string.c_str());
   response->status = "STRING CHANGED!";
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]",
-              (int)response->status.c_str());
+              (int64_t)response->status.c_str());
+}
+
+void MinimalPublisher::make_transforms() {
+  geometry_msgs::msg::TransformStamped t;
+
+  t.header.stamp = this->get_clock()->now();
+  t.header.frame_id = "world";
+  t.child_frame_id = "dlihc";
+
+  t.transform.translation.x = 1;
+  t.transform.translation.y = 0;
+  t.transform.translation.z = 0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, 10);
+  t.transform.rotation.x = q.x();
+  t.transform.rotation.y = q.y();
+  t.transform.rotation.z = q.z();
+  t.transform.rotation.w = q.w();
+
+  tf_static_broadcaster_->sendTransform(t);
 }

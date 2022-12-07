@@ -67,9 +67,11 @@ ros2 service call /modify_string cpp_pubsub/srv/ModifyString "{new_string: <your
 ## **Using Launch files**
 We can use launch files to 'spin' multiple nodes at once with arguments passed to each of them. The arguments provided are the parameters to the nodes being executed. We have two parameters that can take user inputs,
 
-* `my_message` *# the new message to be published*
+* `my_message` *#the new message to be published*
 
-* `my_message_freq` *# time between successive messages in ms*
+* `my_message_freq` *#time between successive messages in ms*
+
+* `rosbag_record`  *#whether or not to record a rosbag file for the current execution (exclusive to `_launch_bag.py` and not in `_launch.py`)*
 
 To do this, execute the following command:
 ```
@@ -78,6 +80,23 @@ ros2 launch cpp_pubsub _launch.py my_message:=<your_message> my_message_freq:=<y
 ``` 
 You can choose to give one or both the arguments at launch.
 
+## **Testing the package (using colcon)**
+Open a new terminal, navigate to `ros2_ws`, and source the setup files as we did before.
+
+Run the publisher as described in the "Publisher and Subscriber" section.
+
+Now, use the following command to test the code:
+```
+colcon test --event-handlers console_direct+ --packages-select cpp_pubsub
+```
+
+## **Generating (recording) rosbag file**
+Open a new terminal, navigate to `ros2_ws`, and source the setup files as we did before.
+
+Here, we have 2 launch files:
+
+* `_launch.py`: Runs a publisher and subsriber with the given message
+* `_launch_bag.py`: Inherits the functionality of `_launch.py` and adds the option to record rosbags
 
 ## **Sample Outputs**
 Attached are two sample outputs for different log levels:

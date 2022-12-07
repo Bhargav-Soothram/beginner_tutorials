@@ -30,12 +30,15 @@
 #ifndef INCLUDE_BASIC_PUBLISHER_HPP_
 #define INCLUDE_BASIC_PUBLISHER_HPP_
 
-#include <string>
 #include <memory>
+#include <string>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
 #include "cpp_pubsub/srv/modify_string.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_ros/static_transform_broadcaster.h"
 
 class MinimalPublisher : public rclcpp::Node {
  public:
@@ -45,8 +48,7 @@ class MinimalPublisher : public rclcpp::Node {
    * @param node_name Name of the publisher node
    * @param topic_name Name of the topic over which messages are sent
    */
-  MinimalPublisher(const std::string &node_name = "minimal_publisher",
-                   std::string topic_name = "chatter");
+  MinimalPublisher(const std::string &node_name, std::string topic_name);
 
  private:
   rclcpp::TimerBase::SharedPtr timer_;  //!< Pointer to callback
@@ -71,6 +73,9 @@ class MinimalPublisher : public rclcpp::Node {
   void update_string(
       const std::shared_ptr<cpp_pubsub::srv::ModifyString::Request> request,
       std::shared_ptr<cpp_pubsub::srv::ModifyString::Response> response);
+
+  void make_transforms();
+  std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
 };
 
 #endif  // INCLUDE_BASIC_PUBLISHER_HPP_

@@ -1,6 +1,5 @@
-Done processing ./include/basic_publisher.hpp
-Done processing ./include/basic_subscriber.hpp
 Done processing ./app/listener.cpp
 Done processing ./app/talker.cpp
 Done processing ./src/basic_publisher.cpp
 Done processing ./src/basic_subscriber.cpp
+Done processing ./test/minimal_integration_test.cpp
