@@ -30,7 +30,8 @@
 
 #include <basic_publisher.hpp>
 
-MinimalPublisher::MinimalPublisher(const std::string &node_name, std::string topic_name)
+MinimalPublisher::MinimalPublisher(const std::string &node_name,
+                                   std::string topic_name)
     : Node(node_name) {
   // Declaring parameters
   this->declare_parameter("my_message", "Stranger Things!");
@@ -64,7 +65,8 @@ MinimalPublisher::MinimalPublisher(const std::string &node_name, std::string top
                                  std::placeholders::_1, std::placeholders::_2));
 
   // additions for Week11_HW after this...
-  MinimalPublisher::tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
+  MinimalPublisher::tf_static_broadcaster_ =
+      std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
   // Publish static transforms once at startup
   this->make_transforms();
@@ -85,30 +87,25 @@ void MinimalPublisher::update_string(
               request->new_string.c_str());
   response->status = "STRING CHANGED!";
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%s]",
-              (long int)response->status.c_str());
+              (int64_t)response->status.c_str());
 }
 
+void MinimalPublisher::make_transforms() {
+  geometry_msgs::msg::TransformStamped t;
 
-void MinimalPublisher::make_transforms()
-  {
-    geometry_msgs::msg::TransformStamped t;
+  t.header.stamp = this->get_clock()->now();
+  t.header.frame_id = "world";
+  t.child_frame_id = "dlihc";
 
-    t.header.stamp = this->get_clock()->now();
-    t.header.frame_id = "world";
-    t.child_frame_id = "dlihc";
+  t.transform.translation.x = 1;
+  t.transform.translation.y = 0;
+  t.transform.translation.z = 0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, 10);
+  t.transform.rotation.x = q.x();
+  t.transform.rotation.y = q.y();
+  t.transform.rotation.z = q.z();
+  t.transform.rotation.w = q.w();
 
-    t.transform.translation.x = 1;
-    t.transform.translation.y = 0;
-    t.transform.translation.z = 0;
-    tf2::Quaternion q;
-    q.setRPY(
-      0,
-      0,
-      10);
-    t.transform.rotation.x = q.x();
-    t.transform.rotation.y = q.y();
-    t.transform.rotation.z = q.z();
-    t.transform.rotation.w = q.w();
-
-    tf_static_broadcaster_->sendTransform(t);
-  }
+  tf_static_broadcaster_->sendTransform(t);
+}

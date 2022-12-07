@@ -30,15 +30,15 @@
 #ifndef INCLUDE_BASIC_PUBLISHER_HPP_
 #define INCLUDE_BASIC_PUBLISHER_HPP_
 
-#include <string>
 #include <memory>
+#include <string>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+
+#include "cpp_pubsub/srv/modify_string.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_ros/static_transform_broadcaster.h"
-#include "cpp_pubsub/srv/modify_string.hpp"
-
 
 class MinimalPublisher : public rclcpp::Node {
  public:

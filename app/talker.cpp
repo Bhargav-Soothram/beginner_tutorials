@@ -33,9 +33,9 @@
 
 auto main(int argc, char* argv[]) -> int {
   rclcpp::init(argc, argv);
-  rclcpp::spin(
-      std::make_shared<MinimalPublisher>("talker", "chatter"));  // 'spins' node to continuously
-                                              // send messages
+  rclcpp::spin(std::make_shared<MinimalPublisher>(
+      "talker", "chatter"));  // 'spins' node to continuously
+                              // send messages
   rclcpp::shutdown();
   return 0;
 }

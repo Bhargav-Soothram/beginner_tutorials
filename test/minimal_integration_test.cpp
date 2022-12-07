@@ -28,62 +28,65 @@
  *
  */
 
-#include <stdlib.h>
 #include <gtest/gtest.h>
+#include <stdlib.h>
+
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
-#include "cpp_pubsub/srv/modify_string.hpp"
 
+#include "cpp_pubsub/srv/modify_string.hpp"
 
 namespace integration_test_alpha {
 class TestingFixture : public testing::Test {
  public:
-  TestingFixture()
-      : node_(std::make_shared<rclcpp::Node>("basic_test")) {
+  TestingFixture() : node_(std::make_shared<rclcpp::Node>("basic_test")) {
     RCLCPP_ERROR_STREAM(node_->get_logger(), "DONE WITH CONSTRUCTOR!!");
   }
 
   void SetUp() override {
     // Setup things that should occur before every test instance should go here
-    client_ = node_->create_client<cpp_pubsub::srv::ModifyString>("modify_string");
+    client_ =
+        node_->create_client<cpp_pubsub::srv::ModifyString>("modify_string");
     RCLCPP_INFO_STREAM(node_->get_logger(), "Setup Complete");
   }
 
   std::string send_service_call() {
     auto request = std::make_shared<cpp_pubsub::srv::ModifyString::Request>();
-    request->new_string = "Updated string!"; // The request that will be sent via the service.
+    request->new_string =
+        "Updated string!";  // The request that will be sent via the service.
 
     // Wait for services to load.
     while (!client_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(node_->get_logger(), "Exiting...");
-            return 0;
-        }
-        RCLCPP_INFO(node_->get_logger(), "Service not yet available...");
+      if (!rclcpp::ok()) {
+        RCLCPP_ERROR(node_->get_logger(), "Exiting...");
+        return 0;
+      }
+      RCLCPP_INFO(node_->get_logger(), "Service not yet available...");
     }
 
     // Sending the service request
     auto result = client_->async_send_request(request);
 
     // Completion of the service request
-    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-        std::string temp{result.get()->status.c_str()};
-        std::cout << "This happened" << std::endl;
-        RCLCPP_INFO(node_->get_logger(), "Response %s", temp.c_str());
+    if (rclcpp::spin_until_future_complete(node_, result) ==
+        rclcpp::FutureReturnCode::SUCCESS) {
+      std::string temp{result.get()->status.c_str()};
+      std::cout << "This happened" << std::endl;
+      RCLCPP_INFO(node_->get_logger(), "Response %s", temp.c_str());
 
-        return temp;
+      return temp;
     }
     // When the service has failed.
-    RCLCPP_ERROR(node_->get_logger(), "Failed to call service change_publisher_string"); 
+    RCLCPP_ERROR(node_->get_logger(),
+                 "Failed to call service change_publisher_string");
     return "Service call failed...";
   }
-  void TearDown() override {
-    std::cout << "DONE WITH TEARDOWN" << std::endl;
-  }
+  void TearDown() override { std::cout << "DONE WITH TEARDOWN" << std::endl; }
 
  protected:
   rclcpp::Node::SharedPtr node_;
-  rclcpp::Client<cpp_pubsub::srv::ModifyString>::SharedPtr client_; //!< The client that uses the service.
+  rclcpp::Client<cpp_pubsub::srv::ModifyString>::SharedPtr
+      client_;  //!< The client that uses the service.
 };
 
 TEST_F(TestingFixture, TrueIsTrueTest) {
@@ -92,8 +95,8 @@ TEST_F(TestingFixture, TrueIsTrueTest) {
 }
 
 TEST_F(TestingFixture, ServiceCallCheck) {
-    std::cout << "Service call check" << std::endl;
-    EXPECT_EQ(send_service_call(), "STRING CHANGED!");
+  std::cout << "Service call check" << std::endl;
+  EXPECT_EQ(send_service_call(), "STRING CHANGED!");
 }
 }  // namespace integration_test_alpha
 
