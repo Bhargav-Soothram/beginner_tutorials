@@ -20,22 +20,22 @@
  *
  * @file talker.cpp
  * @author Bhargav Kumar Soothram (bsoothra@umd.edu)
- * @brief Driver for the publisher node
+ * @brief Driver for rosbag recorder
  * @version 0.1
- * @date 2022-11-10
+ * @date 2022-12-03
  *
  * @copyright Copyright (c) 2022
  *
  */
 
-#include <basic_publisher.hpp>
 #include <memory>
+#include <basic_recorder.hpp>
 
 auto main(int argc, char* argv[]) -> int {
   rclcpp::init(argc, argv);
   rclcpp::spin(
-      std::make_shared<MinimalPublisher>("talker", "chatter"));  // 'spins' node to continuously
-                                              // send messages
+      std::make_shared<SimpleBagRecorder>());  // 'spins' node to continuously
+                                              // record messages
   rclcpp::shutdown();
   return 0;
 }

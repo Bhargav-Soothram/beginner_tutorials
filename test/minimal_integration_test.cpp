@@ -20,9 +20,9 @@
  *
  * @file basic_publisher.hpp
  * @author Bhargav Kumar Soothram (bsoothra@umd.edu)
- * @brief Header file for basic_publisher.cpp
+ * @brief Integration test for a service call
  * @version 0.1
- * @date 2022-11-10
+ * @date 2022-11-27
  *
  * @copyright Copyright (c) 2022
  *
